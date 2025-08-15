@@ -7,25 +7,84 @@ const maxFallSpeed = 15; // terminal velocity
 let velocityY = 0; // current vertical velocity
 let isOnGround = false;
 
+const keysPressed = {
+    left: false,
+    right: false,
+    up: false,
+    down: false
+};
+
 document.addEventListener("keydown", function(event) {
     switch(event.key) {
         case "ArrowLeft":
         case "A":
         case "a":
-            toLeft();
+            keysPressed.left = true;
             break;
         case "ArrowRight":
         case "D":
         case "d":
-            toRight();
+            keysPressed.right = true;
             break;
         case "ArrowUp":
         case "W":
         case "w":
-            toUp();
+            keysPressed.up = true;
+            break;
+        case "ArrowDown":
+        case "S":
+        case "s":
+            keysPressed.down = true;
+            break;
+    }
+    handleMovement();
+});
+
+document.addEventListener("keyup", function(event) {
+    switch(event.key) {
+        case "ArrowLeft":
+        case "A":
+        case "a":
+            keysPressed.left = false;
+            break;
+        case "ArrowRight":
+        case "D":
+        case "d":
+            keysPressed.right = false;
+            break;
+        case "ArrowUp":
+        case "W":
+        case "w":
+            keysPressed.up = false;
+            break;
+        case "ArrowDown":
+        case "S":
+        case "s":
+            keysPressed.down = false;
             break;
     }
 });
+
+function handleMovement() {
+    // Handle diagonal and single direction movement
+    if (keysPressed.left && keysPressed.up) {
+        toDiagonal('left-up');
+    } else if (keysPressed.right && keysPressed.up) {
+        toDiagonal('right-up');
+    } else if (keysPressed.left && keysPressed.down) {
+        toDiagonal('left-down');
+    } else if (keysPressed.right && keysPressed.down) {
+        toDiagonal('right-down');
+    } else if (keysPressed.left) {
+        toLeft();
+    } else if (keysPressed.right) {
+        toRight();
+    } else if (keysPressed.up) {
+        toUp();
+    } else if (keysPressed.down) {
+        toDown();
+    }
+}
 
 function toLeft() {
     const character = document.getElementById("myElement");
@@ -75,6 +134,62 @@ function toDown(){
     
     if (checkCollision(character, platform)) {
         character.style.top = originalTop + "px";
+    }
+}
+
+function toDiagonal(direction) {
+    const character = document.getElementById("myElement");
+    const platform = document.getElementById("platform");
+    
+    const originalLeft = character.offsetLeft;
+    const originalTop = character.offsetTop;
+    
+    // Diagonal movement with reduced speed to maintain consistent movement speed
+    const diagonalSpeed = 7; // Slightly less than 10 to compensate for diagonal distance
+    
+    let newLeft = originalLeft;
+    let newTop = originalTop;
+    
+    switch(direction) {
+        case 'left-up':
+            newLeft = originalLeft - diagonalSpeed;
+            if (isOnGround) {
+                velocityY = -upGrav * 0.3; // Jump
+                isOnGround = false;
+            }
+            break;
+        case 'right-up':
+            newLeft = originalLeft + diagonalSpeed;
+            if (isOnGround) {
+                velocityY = -upGrav * 0.3; // Jump
+                isOnGround = false;
+            }
+            break;
+        case 'left-down':
+            newLeft = originalLeft - diagonalSpeed;
+            newTop = originalTop + diagonalSpeed;
+            break;
+        case 'right-down':
+            newLeft = originalLeft + diagonalSpeed;
+            newTop = originalTop + diagonalSpeed;
+            break;
+    }
+    
+    // Apply horizontal movement
+    character.style.left = newLeft + "px";
+    
+    // Check horizontal collision and revert if needed
+    if (checkHorizontalCollision(character, platform)) {
+        character.style.left = originalLeft + "px";
+    }
+    
+    // Apply vertical movement (only for down movements, up is handled by gravity system)
+    if (direction.includes('down')) {
+        character.style.top = newTop + "px";
+        
+        if (checkCollision(character, platform)) {
+            character.style.top = originalTop + "px";
+        }
     }
 }
 
