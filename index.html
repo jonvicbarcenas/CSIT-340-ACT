@@ -3,16 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="script.js"></script>
+    <script type="module" src="./js/main.js"></script>
     <link rel="stylesheet" href="styles.css">
     <title>Myron chan</title>
 </head>
 <body>
-    <img src="moves/moves/idle-1.png" id="myElement" class="char">
+    <div id="gameUI">
+        <div id="healthBar">
+            <div id="healthBarFill"></div>
+            <span id="healthText">100</span>
+        </div>
+        <div id="scoreDisplay">Score: <span id="score">0</span></div>
+        <div id="livesDisplay">Lives: <span id="lives">3</span></div>
+    </div>
 
+    <div id="gameOverScreen" class="hidden">
+        <div id="gameOverContent">
+            <h1>Game Over!</h1>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <button id="restartButton">Restart Game</button>
+        </div>
+    </div>
+
+    <img src="moves/moves/idle-1.png" id="myElement" class="char">
     <img src="moves/moves/area.png" id="platform" class="platform">
-    
     <div id="underground" class="underground-collision"></div>
 
+    <div id="powerUps"></div>
 </body>
 </html>
