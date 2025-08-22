@@ -12,7 +12,7 @@ export function createBullet(type) {
   bullet.className = "bullet"
 
   if (type === "horizontal") {
-    bullet.src = "moves/moves/bullet_h.png"
+    bullet.src = "../moves/moves/bullet_h.png"
     bullet.style.position = "absolute"
     bullet.style.left = window.innerWidth + "px"
     bullet.style.top = Math.random() * (window.innerHeight - 200) + 100 + "px"
