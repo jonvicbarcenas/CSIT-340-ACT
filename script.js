@@ -579,4 +579,16 @@ setInterval(function() {
 // Initialize animation system when page loads
 document.addEventListener('DOMContentLoaded', function() {
     setAnimation('idle');
+    
+    // Fade out welcome message after 5 seconds
+    setTimeout(function() {
+        const welcomeMessage = document.getElementById('welcome-message');
+        if (welcomeMessage) {
+            welcomeMessage.classList.add('fade-out');
+            // Remove the element completely after fade animation
+            setTimeout(function() {
+                welcomeMessage.style.display = 'none';
+            }, 1000);
+        }
+    }, 5000);
 });
